@@ -63,6 +63,9 @@ local function removeEffect(unitID)
 	Spring.SetUnitRulesParam(unitID, "disarmed", 0, LOS_ACCESS)
 	GG.UpdateUnitAttributes(unitID)
 	GG.ScriptNotifyDisarmed(unitID, false)
+	if GG.JumpNotifyDisarmRemoved then
+		GG.JumpNotifyDisarmRemoved(unitID)
+	end
 end
 
 local function HaltBurst(unitID, untilFrame)
@@ -214,7 +217,6 @@ end
 
 function gadget:GameFrame(n)
 	f = n
-
 	if paraUnits[n] then
 		for i = 1, paraUnits[n].count do
 			local unitID = paraUnits[n].data[i]

@@ -566,34 +566,6 @@ local function ValidJumpLocation(unitDefID, pos)
 	return true
 end
 
-function gadget:Initialize()
-	Spring.SetGameRulesParam("jumpJets", 1)
-	Spring.SetCustomCommandDrawData(CMD_JUMP, "Jump", {0, 1, 0, 0.7})
-	Spring.AssignMouseCursor("Jump", "cursorJump", true, true)
-	gadgetHandler:RegisterCMDID(CMD_JUMP)
-	for _, unitID in pairs(Spring.GetAllUnits()) do
-		gadget:UnitCreated(unitID, Spring.GetUnitDefID(unitID))
-	end
-end
-
-function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-	if (not jumpDefs[unitDefID]) then
-		return
-	end
-	Spring.SetUnitRulesParam(unitID, "jumpReload", jumpDefs[unitDefID].charges or 1)
-	spInsertUnitCmdDesc(unitID, jumpCmdDesc)
-end
-
-function gadget:UnitDestroyed(oldUnitID, unitDefID)
-	if jumping[oldUnitID] then
-		jumping[oldUnitID] = nil -- empty old unit's data
-		uniqueCoroutineCounter[oldUnitID] = nil
-	end
-	if jumpReloadMod[unitID] then
-		jumpReloadMod[unitID] = nil
-	end
-end
-
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if cmdID == CMD.INSERT and cmdParams[2] == CMD_JUMP then
 		return gadget:AllowCommand(unitID, unitDefID, teamID, CMD_JUMP, {cmdParams[4], cmdParams[5], cmdParams[6]}, cmdParams[3])
@@ -619,37 +591,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true -- allowed
 end
 
-function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions) -- Only calls for custom commands
-	if (not jumpDefs[unitDefID]) then
-		return false
-	end
-
-	if (jumpDefs[unitDefID].noJumpHandling) then
-		return true, false
-	end
-	
-	if (cmdID ~= CMD_JUMP) then
-		return false
-	end
-
-	if (not Spring.ValidUnitID(unitID)) or (not cmdParams[3]) then
-		return true, true
-	end
-
-	if ((Spring.GetUnitRulesParam(unitID, "orbitalDrop") or 0) == 1) then
-		return true, false
-	end
-
-	if Spring.GetUnitIsStunned(unitID) then
-		-- these normally don't receive CommandFallback,
-		-- but can be reached via CMD.INSERT (engine bug?)
-		return true, false
-	end
-
-	if (jumping[unitID]) then
-		return true, false -- command was used but don't remove it (unit is still jumping)
-	end
-
+local function AttemptJump(unitID, unitDefID, cmdID, cmdParams)
 	if lastJumpPosition[unitID] then
 		if abs(lastJumpPosition[unitID][1] - cmdParams[1]) < 1 and
 				abs(lastJumpPosition[unitID][3] - cmdParams[3]) < 1 then
@@ -717,6 +659,75 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	return true, false -- command was used but don't remove it
 end
 
+function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions) -- Only calls for custom commands
+	if (cmdID ~= CMD_JUMP) then
+		return false
+	end
+
+	if (not jumpDefs[unitDefID]) then
+		return false
+	end
+
+	if (jumpDefs[unitDefID].noJumpHandling) then
+		return true, false
+	end
+
+	if (not Spring.ValidUnitID(unitID)) or (not cmdParams[3]) then
+		return true, true
+	end
+
+	if ((Spring.GetUnitRulesParam(unitID, "orbitalDrop") or 0) == 1) then
+		return true, false
+	end
+
+	if Spring.GetUnitIsStunned(unitID) then
+		-- these normally don't receive CommandFallback,
+		-- but can be reached via CMD.INSERT (engine bug?)
+		return true, false
+	end
+
+	if (jumping[unitID]) then
+		return true, false -- command was used but don't remove it (unit is still jumping)
+	end
+	
+	local cmdUsed, cmdRemove = AttemptJump(unitID, unitDefID, cmdID, cmdParams)
+	return cmdUsed, cmdRemove
+end
+
+local function CheckUnstunJump(unitID, unitDefID)
+	local cmdID, _, cmdTag, cp_1, cp_2, cp_3 = Spring.GetUnitCurrentCommand(unitID)
+	if (cmdID ~= CMD_JUMP) or (not cp_3) then
+		return
+	end
+	unitDefID = unitDefID or Spring.GetUnitDefID(unitID)
+	if not unitDefID then
+		return
+	end
+	if (not jumpDefs[unitDefID]) or (jumpDefs[unitDefID].noJumpHandling) then
+		return
+	end
+	if (not Spring.ValidUnitID(unitID)) then
+		return
+	end
+	if ((Spring.GetUnitRulesParam(unitID, "orbitalDrop") or 0) == 1) then
+		return
+	end
+	local stunnedOrInbuild = Spring.GetUnitIsStunned(unitID)
+	if stunnedOrInbuild or Spring.GetUnitRulesParam(unitID,"disarmed") == 1 then
+		return
+	end
+	if (jumping[unitID]) then
+		return
+	end
+	AttemptJump(unitID, unitDefID, cmdID, {cp_1, cp_2, cp_3})
+end
+
+function gadget:UnitStunned(unitID, unitDefID, unitTeam, isStunned)
+	if not isStunned then
+		CheckUnstunJump(unitID, unitDefID)
+	end
+end
+
 function gadget:UnitFromFactory(unitID, unitDefID, unitTeam, facID, facDefID)
 	if jumpDefs[unitDefID] then
 		-- The first command in the queue is a move command added by the engine.
@@ -736,6 +747,38 @@ function gadget:GameFrame(currFrame)
 		if currFrame-queue_n_age[2] > 300 then
 			jumps[coords] = nil
 		end
+	end
+end
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+function gadget:UnitCreated(unitID, unitDefID, unitTeam)
+	if (not jumpDefs[unitDefID]) then
+		return
+	end
+	Spring.SetUnitRulesParam(unitID, "jumpReload", jumpDefs[unitDefID].charges or 1)
+	spInsertUnitCmdDesc(unitID, jumpCmdDesc)
+end
+
+function gadget:UnitDestroyed(oldUnitID, unitDefID)
+	if jumping[oldUnitID] then
+		jumping[oldUnitID] = nil -- empty old unit's data
+		uniqueCoroutineCounter[oldUnitID] = nil
+	end
+	if jumpReloadMod[unitID] then
+		jumpReloadMod[unitID] = nil
+	end
+end
+
+function gadget:Initialize()
+	Spring.SetGameRulesParam("jumpJets", 1)
+	Spring.SetCustomCommandDrawData(CMD_JUMP, "Jump", {0, 1, 0, 0.7})
+	Spring.AssignMouseCursor("Jump", "cursorJump", true, true)
+	gadgetHandler:RegisterCMDID(CMD_JUMP)
+	GG.JumpNotifyDisarmRemoved = CheckUnstunJump
+	for _, unitID in pairs(Spring.GetAllUnits()) do
+		gadget:UnitCreated(unitID, Spring.GetUnitDefID(unitID))
 	end
 end
 
