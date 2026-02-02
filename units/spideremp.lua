@@ -85,7 +85,7 @@ return { spideremp = {
       },
 
       damage                  = {
-        default        = 60.01,
+        default        = 65.01,
       },
 
       duration                = 8,
