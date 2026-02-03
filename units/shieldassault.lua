@@ -117,8 +117,8 @@ return { shieldassault = {
       },
 
       damage                  = {
-        default = 170,
-        planes  = 170,
+        default = 180,
+        planes  = 180,
       },
 
       explosionGenerator      = [[custom:MARY_SUE]],
@@ -126,12 +126,12 @@ return { shieldassault = {
       impulseFactor           = 0.4,
       interceptedByShieldType = 1,
       range                   = 280,
-      reloadtime              = 4,
+      reloadtime              = 3.9,
       soundHit                = [[explosion/ex_med5]],
       soundStart              = [[weapon/cannon/cannon_fire5]],
       turret                  = true,
       weaponType              = [[Cannon]],
-      weaponVelocity          = 210,
+      weaponVelocity          = 215,
     },
 
   },
