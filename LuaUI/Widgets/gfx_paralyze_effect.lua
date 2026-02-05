@@ -582,10 +582,10 @@ function widget:GameFrame(n)
 				if Spring.ValidUnitID(unitID) then
 					local para = utGetIsUnitEmped(unitID) and 1
 					local disarmed = (spGetUnitRulesParam(unitID, "disarmed") == 1) and 1
-					local slow = spGetUnitRulesParam(unitID, "slowState")
+					local slow = math.min(0.5, spGetUnitRulesParam(unitID, "slowState") or 0)
 					local fire = (spGetUnitRulesParam(unitID, "on_fire") == 1)
 					
-					local wantRemove = (not para) and (not disarmed) and (slow or 0) <= 0 and (not fire)
+					local wantRemove = (not para) and (not disarmed) and slow <= 0 and (not fire)
 					if (not para) and (not disarmed) then
 						if empLinger[unitID] then
 							empLinger[unitID] = empLinger[unitID] - UPDATE_RATE
@@ -616,7 +616,7 @@ function widget:GameFrame(n)
 							disarmLinger[unitID] = LINGER_FRAMES
 						end
 						local val = 0
-						if (slow or 0) > 0 then
+						if slow > 0 then
 							val = val + 1 + slow
 						end
 						if para then
