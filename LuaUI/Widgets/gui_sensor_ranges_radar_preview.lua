@@ -1,6 +1,6 @@
 function widget:GetInfo()
 	return {
-		name = "Sensor Ranges Radar Preview 2",
+		name = "Sensor Ranges Radar Preview 3",
 		desc = "Raytraced Radar Range Coverage on building Radar (GL4)",
 		author = "Beherith",
 		date = "2021.07.12",
