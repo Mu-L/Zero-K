@@ -110,7 +110,7 @@ function script.AimWeapon(num, heading, pitch)
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
 	
-	Turn(head, y_axis, heading, math.rad(140))
+	Turn(head, y_axis, heading, math.rad(120))
 	Turn(l_gun, x_axis, -pitch, math.rad(100))
 	Turn(r_gun, x_axis, -pitch, math.rad(100))
 	WaitForTurn(head, y_axis)
