@@ -66,7 +66,6 @@ end
 function script.Create()
 	gun_1 = true
 	StartThread(GG.Script.SmokeUnit, unitID, smokePiece)
-	Move(base, x_axis, -2)
 end
 
 local function Stopping()
