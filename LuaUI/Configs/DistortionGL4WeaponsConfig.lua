@@ -2233,7 +2233,7 @@ projectileDefDistortionsNames.striderbantha_ata = GetDistortionClass("TachyonBea
 
 
 explosionDistortionsNames.spidercrabe_arm_crabe_gauss = {
-	GetDistortionClass("GroundShockWave", "Smallish", {
+	GetDistortionClass("GroundShockWave", "Large", {
 		shockWidth = 8,
 	}),
 }

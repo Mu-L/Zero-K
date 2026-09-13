@@ -3,6 +3,8 @@ if not Spring.Utilities.Base64Decode then
 	VFS.Include("LuaRules/Utilities/base64.lua", nil, VFS.GAME)
 end
 
+VFS.Include("LuaRules/Utilities/tablefunctions_bar.lua", nil, VFS.GAME)
+
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
