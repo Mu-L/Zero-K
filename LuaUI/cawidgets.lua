@@ -1768,6 +1768,7 @@ function widgetHandler:DrawWorld()
 	--	Spring.Utilities.TableEcho(params, "params")
 	--end
 	for _, w in r_ipairs(self.DrawWorldList) do
+		gl.Fog(true)
 		tracy.ZoneBeginN("W:DrawWorld:" .. w.whInfo.name)
 		w:DrawWorld()
 		--if doEcho then
@@ -1777,6 +1778,7 @@ function widgetHandler:DrawWorld()
 		--end
 		tracy.ZoneEnd()
 	end
+	gl.Fog(false)
 	tracy.ZoneEnd()
 end
 
@@ -1784,20 +1786,24 @@ end
 function widgetHandler:DrawWorldPreUnit()
 	tracy.ZoneBeginN("W:DrawWorldPreUnit")
 	for _, w in r_ipairs(self.DrawWorldPreUnitList) do
+		gl.Fog(true)
 		tracy.ZoneBeginN("W:DrawWorldPreUnit:" .. w.whInfo.name)
 		w:DrawWorldPreUnit()
 		tracy.ZoneEnd()
 	end
+	gl.Fog(false)
 	tracy.ZoneEnd()
 end
 
 function widgetHandler:DrawWorldPreParticles()
 	tracy.ZoneBeginN("W:DrawWorldPreParticles")
 	for _, w in r_ipairs(self.DrawWorldPreParticlesList) do
+		gl.Fog(true)
 		tracy.ZoneBeginN("W:DrawWorldPreParticles:" .. w.whInfo.name)
 		w:DrawWorldPreParticles()
 		tracy.ZoneEnd()
 	end
+	gl.Fog(false)
 	tracy.ZoneEnd()
 end
 
@@ -1805,10 +1811,12 @@ end
 function widgetHandler:DrawWorldShadow()
 	tracy.ZoneBeginN("W:DrawWorldShadow")
 	for _, w in r_ipairs(self.DrawWorldShadowList) do
+		gl.Fog(true)
 		tracy.ZoneBeginN("W:DrawWorldShadow:" .. w.whInfo.name)
 		w:DrawWorldShadow()
 		tracy.ZoneEnd()
 	end
+	gl.Fog(false)
 	tracy.ZoneEnd()
 end
 
@@ -1816,10 +1824,12 @@ end
 function widgetHandler:DrawWorldReflection()
 	tracy.ZoneBeginN("W:DrawWorldReflection")
 	for _, w in r_ipairs(self.DrawWorldReflectionList) do
+		gl.Fog(true)
 		tracy.ZoneBeginN("W:DrawWorldReflection:" .. w.whInfo.name)
 		w:DrawWorldReflection()
 		tracy.ZoneEnd()
 	end
+	gl.Fog(false)
 	tracy.ZoneEnd()
 end
 
@@ -1827,10 +1837,12 @@ end
 function widgetHandler:DrawWorldRefraction()
 	tracy.ZoneBeginN("W:DrawWorldRefraction")
 	for _, w in r_ipairs(self.DrawWorldRefractionList) do
+		gl.Fog(true)
 		tracy.ZoneBeginN("W:DrawWorldRefraction:" .. w.whInfo.name)
 		w:DrawWorldRefraction()
 		tracy.ZoneEnd()
 	end
+	gl.Fog(false)
 	tracy.ZoneEnd()
 end
 
