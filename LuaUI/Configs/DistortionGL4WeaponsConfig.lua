@@ -256,27 +256,6 @@ local BaseClasses = {
 		},
 	},
 
-	TachyonBeam = {
-		distortionType = "beam", -- or cone or beam
-		distortionConfig = {
-			posx = 0,
-			posy = 0,
-			posz = 0,
-			radius = 10,
-			noiseStrength = 0.35,
-			noiseScaleSpace = 0.08,
-			onlyModelMap = 0,
-			riseRate = -0.2,
-			pos2x = 100,
-			pos2y = 500,
-			pos2z = 100, -- beam distortions only, specifies the endpoint of the beam
-			lifeTime = 4,
-			sustain = 1,
-			rampUp = 0,
-			decay = 3,
-			effectType = 7,
-		},
-	},
 
 	LightningBeam = {
 		distortionType = "beam", -- or cone or beam
@@ -1348,44 +1327,6 @@ local BaseClasses = {
 			effectType = 0,
 		},
 	},
-	ExplosionHeatFirewalker = { -- spawned on explosions
-		distortionType = "point", -- or cone or beam
-		yOffset = 0, -- Y offsets are only ever used for explosions!
-		distortionConfig = {
-			posx = 0,
-			posy = 0,
-			posz = 0,
-			radius = 10,
-			noiseStrength = 1,
-			noiseScaleSpace = 0.75,
-			distanceFalloff = 0.5,
-			startRadius = 0.3,
-			onlyModelMap = 0,
-			lifeTime = 400,
-			rampUp = 30,
-			decay = 260,
-			effectType = 0,
-		},
-	},
-	ExplosionHeatLong = { -- spawned on explosions
-		distortionType = "point", -- or cone or beam
-		yOffset = 0, -- Y offsets are only ever used for explosions!
-		distortionConfig = {
-			posx = 0,
-			posy = 0,
-			posz = 0,
-			radius = 10,
-			noiseStrength = 1.1,
-			noiseScaleSpace = 0.65,
-			distanceFalloff = 0.5,
-			startRadius = 0.3,
-			onlyModelMap = 0,
-			lifeTime = 1350,
-			rampUp = 30,
-			decay = 600,
-			effectType = 0,
-		},
-	},
 	ExplosionHeatNuke = { -- spawned on explosions
 		distortionType = "point", -- or cone or beam
 		yOffset = 0, -- Y offsets are only ever used for explosions!
@@ -1637,6 +1578,116 @@ local BaseClasses = {
 			radius = 150,
 			lifeTime = 6,
 			sustain = 0.0035,
+			effectType = 0,
+		},
+	},
+	
+	ProjectileDgun = { -- spawned on explosions
+		distortionType = "point", -- or cone or beam
+		yOffset = 0, -- Y offsets are only ever used for explosions!
+		distortionConfig = {
+			posx = 0,
+			posy = 0,
+			posz = 0,
+			radius = 10,
+			noiseStrength = -20,
+			noiseScaleSpace = 0.1,
+			distanceFalloff = 0.5,
+			onlyModelMap = 0,
+			windAffected = -1,
+			riseRate = 0,
+			--magnificationRate = 8.0,
+			lifeTime = 75,
+			rampUp = 50,
+			decay = 25,
+			effectType = 0,
+		},
+	},
+	
+	
+	
+	
+	-- ZK fiddling
+	
+	Implosion = { 
+		distortionType = "point", -- or cone or beam
+		yOffset = 0, -- Y offsets are only ever used for explosions!
+		distortionConfig = {
+			posx = 0,
+			posy = 0,
+			posz = 0,
+			radius = 150,
+			noiseScaleSpace = 0.2,
+			noiseStrength = 0.2,
+			onlyModelMap = 0,
+			lifeTime = 13,
+			distanceFalloff = 0.6,
+			refractiveIndex = 1.5,
+			decay = 2,
+			rampUp = 4,
+			effectStrength = -1.5,
+			startRadius = 0.2,
+			shockWidth = -0.64,
+			effectType = "airShockwave",
+		},
+	},
+	
+	TachyonBeam = {
+		distortionType = "beam", -- or cone or beam
+		distortionConfig = {
+			posx = 0,
+			posy = 0,
+			posz = 0,
+			radius = 10,
+			noiseStrength = 0.35,
+			noiseScaleSpace = 0.08,
+			onlyModelMap = 0,
+			riseRate = -0.2,
+			pos2x = 100,
+			pos2y = 500,
+			pos2z = 100, -- beam distortions only, specifies the endpoint of the beam
+			lifeTime = 4,
+			sustain = 1,
+			rampUp = 0,
+			decay = 3,
+			effectType = 7,
+		},
+	},
+	ExplosionHeatFirewalker = { -- spawned on explosions
+		distortionType = "point", -- or cone or beam
+		yOffset = 0, -- Y offsets are only ever used for explosions!
+		distortionConfig = {
+			posx = 0,
+			posy = 0,
+			posz = 0,
+			radius = 10,
+			noiseStrength = 1,
+			noiseScaleSpace = 0.75,
+			distanceFalloff = 0.5,
+			startRadius = 0.3,
+			onlyModelMap = 0,
+			lifeTime = 400,
+			rampUp = 30,
+			decay = 260,
+			effectType = 0,
+		},
+	},
+	ExplosionHeatLong = { -- spawned on explosions
+		distortionType = "point", -- or cone or beam
+		yOffset = 0, -- Y offsets are only ever used for explosions!
+		distortionConfig = {
+			posx = 0,
+			posy = 0,
+			posz = 0,
+			radius = 10,
+			noiseStrength = 1.1,
+			noiseScaleSpace = 0.65,
+			distanceFalloff = 0.5,
+			startRadius = 0.3,
+			onlyModelMap = 0,
+			lifeTime = 1350,
+			rampUp = 30,
+			decay = 600,
 			effectType = 0,
 		},
 	},
@@ -2231,9 +2282,18 @@ projectileDefDistortionsNames.hoverarty_ata = GetDistortionClass("TachyonBeam", 
 projectileDefDistortionsNames.turretantiheavy_ata = GetDistortionClass("TachyonBeam", "Banthlaser")
 projectileDefDistortionsNames.striderbantha_ata = GetDistortionClass("TachyonBeam", "Banthlaser")
 
+explosionDistortionsNames.bomberheavy_arm_pidr = {
+	GetDistortionClass("Implosion", "Medium")
+}
 
 explosionDistortionsNames.spidercrabe_arm_crabe_gauss = {
-	GetDistortionClass("GroundShockWave", "Large", {
+	GetDistortionClass("GroundShockWave", "Smallish", {
+		shockWidth = 8,
+	}),
+}
+
+explosionDistortionsNames.spidercrabe_arm_crabe_gauss = {
+	GetDistortionClass("GroundShockWave", "Smallish", {
 		shockWidth = 8,
 	}),
 }
