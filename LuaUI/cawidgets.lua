@@ -697,9 +697,6 @@ function widgetHandler:LoadWidget(filename, _VFSMODE)
 
 	self:FinalizeWidget(widget, filename, basename)
 	local name = widget.whInfo.name
-	if name ~= "Distortion GL4" then
-		return
-	end
 	if (basename == SELECTOR_BASENAME) then
 		self.orderList[name] = 1  --  always enabled
 	end

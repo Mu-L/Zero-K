@@ -27,7 +27,7 @@ local select = select
 -- Localized Spring API for performance
 local spGetGameFrame = Spring.GetGameFrame
 local spEcho = Spring.Echo
-local spGetViewGeometry = Spring.GetViewGeometry
+local spGetViewGeometry = (Spring.Orig or {}).GetViewGeometry or Spring.GetViewGeometry
 local spGetWind = Spring.GetWind
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetUnitIsBeingBuilt = Spring.GetUnitIsBeingBuilt
